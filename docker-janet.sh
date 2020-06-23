@@ -58,3 +58,8 @@ docker push $DOCKER_REPO/janet-sdk
 
 echo $CURRENT_COMMIT > last_commit.txt
 echo $CURRENT_TAG > last_tag.txt
+
+
+if ! git diff --no-ext-diff --quiet --exit-code; then
+    git add -A && git commit -m 'Update last_commit' --allow-empty && git push -u origin master
+fi
