@@ -1,0 +1,20 @@
+name: Build and publish Janet docker images
+
+on:
+  schedule:
+    - cron:  '0 * * * *'
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    name: Docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 
+      - name: run build script
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: docker-janet.sh
+
