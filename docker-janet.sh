@@ -59,6 +59,6 @@ echo $CURRENT_COMMIT > last_commit.txt
 echo $CURRENT_TAG > last_tag.txt
 
 if ! git diff --no-ext-diff --quiet --exit-code; then
-    MSG = $(curl -L -s -H 'Accept: application/json' https://api.github.com/repos/janet-lang/janet/commits/$CURRENT_COMMIT | jq .commit.message)
-    git add -A && git commit -m "[build] Update last_commit:\n\n$MSG" --allow-empty && git push -u origin master
+    MSG=$(curl -L -s -H 'Accept: application/json' "https://api.github.com/repos/janet-lang/janet/commits/$CURRENT_COMMIT" | jq -j .commit.message)
+    git add -A && (printf "[build] Update last_commit:\n\n$MSG" | git commit -F -) && git push -u origin master
 fi
