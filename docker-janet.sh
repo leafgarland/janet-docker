@@ -52,8 +52,8 @@ else
 fi
 
 echo $DOCKER_PASSWORD | docker login -u leafgarland --password-stdin
-docker push $DOCKER_REPO/janet
-docker push $DOCKER_REPO/janet-sdk
+docker push -a $DOCKER_REPO/janet
+docker push -a $DOCKER_REPO/janet-sdk
 
 echo $CURRENT_COMMIT > last_commit.txt
 echo $CURRENT_TAG > last_tag.txt
