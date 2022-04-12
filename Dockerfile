@@ -1,4 +1,4 @@
-FROM alpine:3.12 as alpine-dev
+FROM alpine:3 as alpine-dev
 RUN apk add --no-cache gcc musl-dev make git
 
 FROM alpine-dev as build
