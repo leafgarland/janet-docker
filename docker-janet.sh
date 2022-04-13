@@ -12,7 +12,7 @@ function docker-build () {
     TAGNAME=$1
     COMMIT=$2
     echo "Building with TAGNAME=$TAGNAME and COMMIT=$COMMIT"
-    PLATFORMS="linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6"
+    PLATFORMS="linux/amd64,linux/arm64"
 
     docker buildx build --platform "$PLATFORMS" . --target=core --tag $DOCKER_REPO/janet:$TAGNAME \
         --build-arg "COMMIT=$COMMIT" \
