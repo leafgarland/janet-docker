@@ -14,13 +14,13 @@ function docker-build () {
     echo "Building with TAGNAME=$TAGNAME and COMMIT=$COMMIT"
     PLATFORMS="linux/amd64,linux/arm64"
 
-    docker buildx build --platform "$PLATFORMS" . --target=core --tag $DOCKER_REPO/janet:$TAGNAME \
+    docker buildx build --load --platform "$PLATFORMS" . --target=core --tag $DOCKER_REPO/janet:$TAGNAME \
         --build-arg "COMMIT=$COMMIT" \
         --label "org.opencontainers.image.revision=$COMMIT" \
         --label "org.opencontainers.image.created=$DATE" \
         --label "org.opencontainers.image.source=https://github.com/janet-lang/janet"
 
-    docker buildx build --platform "$PLATFORMS" . --target=sdk --tag $DOCKER_REPO/janet-sdk:$TAGNAME \
+    docker buildx build --load --platform "$PLATFORMS" . --target=sdk --tag $DOCKER_REPO/janet-sdk:$TAGNAME \
         --build-arg "COMMIT=$COMMIT" \
         --label "org.opencontainers.image.revision=$COMMIT" \
         --label "org.opencontainers.image.created=$DATE" \
