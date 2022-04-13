@@ -14,13 +14,13 @@ function docker-build () {
     echo "Building with TAGNAME=$TAGNAME and COMMIT=$COMMIT"
     PLATFORMS="linux/amd64,linux/arm64"
 
-    docker buildx build --load --platform "$PLATFORMS" . --target=core --tag $DOCKER_REPO/janet:$TAGNAME \
+    docker buildx build --push --platform "$PLATFORMS" . --target=core --tag $DOCKER_REPO/janet:$TAGNAME \
         --build-arg "COMMIT=$COMMIT" \
         --label "org.opencontainers.image.revision=$COMMIT" \
         --label "org.opencontainers.image.created=$DATE" \
         --label "org.opencontainers.image.source=https://github.com/janet-lang/janet"
 
-    docker buildx build --load --platform "$PLATFORMS" . --target=sdk --tag $DOCKER_REPO/janet-sdk:$TAGNAME \
+    docker buildx build --push --platform "$PLATFORMS" . --target=sdk --tag $DOCKER_REPO/janet-sdk:$TAGNAME \
         --build-arg "COMMIT=$COMMIT" \
         --label "org.opencontainers.image.revision=$COMMIT" \
         --label "org.opencontainers.image.created=$DATE" \
@@ -31,6 +31,9 @@ if [ "$LAST_COMMIT" == "$CURRENT_COMMIT" ]; then
     echo "No new commits since $CURRENT_COMMIT"
     exit 0
 fi
+
+echo "Logging into dockerhub"
+echo $DOCKER_PASSWORD | docker login -u leafgarland --password-stdin
 
 echo "Building image for latest commit $CURRENT_COMMIT, last commit was $LAST_COMMIT"
 docker-build latest $CURRENT_COMMIT
@@ -52,10 +55,6 @@ else
         docker-build $CURRENT_TAG $CURRENT_TAG_COMMIT
     fi
 fi
-
-echo $DOCKER_PASSWORD | docker login -u leafgarland --password-stdin
-docker push -a $DOCKER_REPO/janet
-docker push -a $DOCKER_REPO/janet-sdk
 
 echo $CURRENT_COMMIT > last_commit.txt
 echo $CURRENT_TAG > last_tag.txt
